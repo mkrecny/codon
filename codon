@@ -1,4 +1,55 @@
 #!/usr/bin/env node
+var fs = require('fs');
+var program_path = process.argv[2];
+var program = fs.readFileSync(__dirname+'/'+program_path, 'utf8');
+console.log('evaluating', program);
+var _errors = [];
 
-var program = process.argv[2];
-console.log(program);
+// 1. remove whitespace
+program = program.replace(/\s+/g, '');
+// 2. make upper case
+program = program.toUpperCase();
+verifyATGCOnly(program);
+verifyMultipleOfThree(program);
+
+//TODO pick up progress here
+var chunks_1 = getProgramChunks(program);
+var chunks_2 = getProgramChunks(program);
+var chunks_3 = getProgramChunks(program);
+console.log(chunks);
+
+function getProgramChunks(str, start){
+  var chunks = [];
+  for (var i=0; i<str.length;i++){
+  }
+  chunks.push(str.slice(0.3));
+  return chunks;
+}
+
+function verifyATGCOnly(str){
+  var ATGC = ['A','T','G','C'];
+  str.split('').forEach(function(c){
+    if (ATGC.indexOf(c)===-1){
+      _errors.push(c+' is not a valid symbol');
+    }
+  });
+  if (_errors.length){
+    return exitWithError();
+  } else {
+    return true;
+  }
+}
+
+function verifyMultipleOfThree(str){
+  if (str.length%3!==0){
+    _errors.push(str.length+' is not a valid program length. Program length must be a multiple of three.');
+    exitWithError();
+  }
+}
+
+function exitWithError(){
+  console.error('**codon choke**');
+  console.error('Error:', _errors.pop());
+  console.error('**fin**');
+  process.exit();
+}
